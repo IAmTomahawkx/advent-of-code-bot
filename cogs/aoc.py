@@ -4,10 +4,10 @@ from typing import Optional, Union
 import asyncpg
 import tabulate
 import discord
-from discord.ext import commands
+from discord.ext import commands, menus as ext_menus
 import discord.ext.commands.core
 
-from utils import tz, time, board as _board
+from utils import tz, time, board as _board, menus
 
 def setup(bot):
     bot.add_cog(Leaderboard(bot))
@@ -71,7 +71,7 @@ class Leaderboard(commands.Cog):
         except:
             await ctx.send("Aborting")
 
-    @commands.group(aliases=['board'], invoke_without_command=True)
+    @commands.group(aliases=['board', 'lb'], invoke_without_command=True)
     @commands.guild_only()
     async def leaderboard(self, ctx: commands.Context):
         """
@@ -84,12 +84,17 @@ class Leaderboard(commands.Cog):
         board = await self.bot.get_board(board_id['board_id'], board_id['cookie'])
         sorts = board.sort_by_local_board
         vals = []
-        for ind, member in enumerate(sorts[0:5], start=1):
+        for ind, member in enumerate(sorts, start=1):
             vals.append((member.stars, member.local_score, member.name))
 
-        v = tabulate.tabulate(vals, headers=("Stars \U00002b50", "board points", "name"), tablefmt="simple", stralign="center")
-        e = discord.Embed(title=f"{board.owner.name}'s leaderboard", description="```\n" + v.strip() + "\n```")
-        await ctx.send(embed=e)
+        boards = []
+        index = 0
+        while index < len(vals):
+            boards.append(tabulate.tabulate(vals[index:index+4], headers=("Stars \U00002b50", "board points", "name"), tablefmt="simple", stralign="center").strip())
+            index += 4
+
+        menu = ext_menus.MenuPages(menus.LeaderboardDataSource(boards, board), clear_reactions_after=True)
+        await menu.start(ctx)
 
     @leaderboard.command()
     @commands.has_guild_permissions(manage_guild=True)

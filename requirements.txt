@@ -9,3 +9,4 @@ asyncpg
 parsedatetime
 python-dateutil
 git+https://github.com/ShineyDev/prettify.py.git
+git+https://github.com/rapptz/discord-ext-menus.git
