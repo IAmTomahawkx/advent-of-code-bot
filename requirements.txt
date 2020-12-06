@@ -1,0 +1,11 @@
+aiohttp
+discord.py
+ujson
+aiodns
+colorama
+jishaku
+tabulate
+asyncpg
+parsedatetime
+python-dateutil
+git+https://github.com/ShineyDev/prettify.py.git
