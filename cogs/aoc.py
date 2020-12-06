@@ -195,7 +195,7 @@ class Leaderboard(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    async def info(self, ctx, user: Union[discord.User, str]=None):
+    async def info(self, ctx, *, user: Union[discord.User, str]=None):
         """
         gives you advent of code info on the given person. if no target is given, will give you your own info
         """
@@ -210,7 +210,7 @@ class Leaderboard(commands.Cog):
             # do this in two queries due to variable row amounts
             data = await self.bot.db.fetchrow(query, user.id, ctx.guild.id)
             if not data:
-                return await ctx.send(f"Hmm, either the {'you havent identified yourself' if user == ctx.author else f'{user.name} hasnt identified themselves'} "
+                return await ctx.send(f"Hmm, either {'you havent identified yourself' if user == ctx.author else f'{user.name} hasnt identified themselves'} "
                                       f"(use the {ctx.prefix}iam command), the server owner has not set up a leaderboard (use the {ctx.prefix}leaderboard set command), "
                                       f"or something screwed up internally. Probably the latter")
 

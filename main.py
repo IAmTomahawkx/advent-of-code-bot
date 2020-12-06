@@ -2,6 +2,7 @@ import asyncio
 import pathlib
 import datetime
 import traceback
+from concurrent import futures
 
 import aiohttp
 import asyncpg
@@ -31,6 +32,7 @@ class AOCBot(commands.Bot):
             raise SystemExit(1)
 
         super(AOCBot, self).__init__(*args, command_prefix=self.get_pre, description="I do cool things", **kwargs)
+        self.loop.set_default_executor(futures.ThreadPoolExecutor(max_workers=2))
 
         self.lock = asyncio.Lock()
         self.session = None
