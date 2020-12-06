@@ -8,6 +8,8 @@ for people who do advent of code in more than one language.
 It can also remind you a few minutes before each puzzle releases, so that you dont waste time opening your workspace,
 or forget about it entirely.
 
+You can either invite it [here](https://discord.com/oauth2/authorize?client_id=784296395280220240&scope=bot), or host it yourself
+
 Requirements
 --
 - Python 3.7 or 3.8

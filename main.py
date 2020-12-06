@@ -85,6 +85,13 @@ async def about(ctx):
 
     await ctx.send(fmt)
 
+@bot.command()
+async def invite(ctx):
+    """
+    gives you a link to invite this bot
+    """
+    await ctx.send(embed=discord.Embed(description=f"You can invite me [Here]({discord.utils.oauth_url(bot.user.id)})", colour=0x2F3136))
+
 bot.load_extension("cogs.aoc")
 bot.load_extension("cogs.reminder")
 bot.load_extension("jishaku")
