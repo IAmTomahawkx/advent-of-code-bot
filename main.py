@@ -59,7 +59,10 @@ class AOCBot(commands.Bot):
         return b
 
     async def on_command_error(self, context, exception):
-        if isinstance(exception, commands.MissingPermissions):
+        if isinstance(exception, commands.CommandNotFound):
+            return
+
+        elif isinstance(exception, commands.MissingPermissions):
             return await context.send(f"You are missing {', '.join(exception.missing_perms)} permissions")
 
         elif isinstance(exception, commands.NoPrivateMessage):
