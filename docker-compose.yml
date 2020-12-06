@@ -15,15 +15,14 @@ services:
     env_file:
       - db.env
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - /var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
     networks:
       - aoc-net
 
 networks:
   aoc-net:
-
-volumes:
-  db-data:
+    internal: true
 
 secrets:
   settings:
