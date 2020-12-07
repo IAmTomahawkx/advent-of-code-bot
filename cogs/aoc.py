@@ -199,6 +199,11 @@ class Leaderboard(commands.Cog):
         """
         gives you advent of code info on the given person. if no target is given, will give you your own info
         """
+        if isinstance(user, str):
+            user = user.strip()
+            if not user:
+                user = ctx.author
+
         user = user or ctx.author
         if isinstance(user, discord.user.BaseUser):
             query = """
