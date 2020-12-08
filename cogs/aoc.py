@@ -147,7 +147,7 @@ class Leaderboard(commands.Cog):
                 return await ctx.send("No names matched...")
 
             closest = closest[0]
-            await ctx.send(f"{ctx.author.mention}, confirm name of {closest}", allowed_mentions=discord.AllowedMentions(users=True))
+            await ctx.send(f"{ctx.author.mention}, confirm name of {closest} (yes/no)", allowed_mentions=discord.AllowedMentions(users=True))
             try:
                 msg = await self.bot.wait_for("message", check=lambda m: m.channel == ctx.channel and m.author == ctx.author, timeout=30)
             except:
