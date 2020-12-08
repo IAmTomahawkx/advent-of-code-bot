@@ -64,12 +64,13 @@ class Reminder(commands.Cog):
             trans = conn.transaction()
             await trans.start()
             try:
-                await ctx.send(f"Alright {ctx.author.name}, i'll remind you in this channel 10 minutes before advent of code "
+                await ctx.send(f"Alright {ctx.author.name}, i'll remind you in this channel 5 minutes before advent of code "
                                f"challenges are released. Use `{await commands.clean_content().convert(ctx, ctx.prefix)}remind cancel` "
                                f"to stop these reminders")
                 await self.bot.db.execute("INSERT INTO reminders VALUES ($1, $2)", ctx.channel.id, ctx.author.id)
             except:
                 await trans.rollback()
+                await ctx.send("Sike. Something messed up (You might already have a reminder set in this channel)")
             else:
                 await trans.commit()
 
