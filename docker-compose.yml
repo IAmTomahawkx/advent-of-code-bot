@@ -1,0 +1,29 @@
+version: "3.3"
+services:
+  aoc:
+    build: .
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - aoc-net
+    secrets:
+      - settings
+
+  postgres:
+    image: 'postgres:13.1-alpine'
+    env_file:
+      - db.env
+    volumes:
+      - /var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - aoc-net
+
+networks:
+  aoc-net:
+    internal: true
+
+secrets:
+  settings:
+    file: ./settings.json

@@ -15,6 +15,7 @@ from utils import board, tz
 
 colorama.init(autoreset=True, wrap=True)
 
+
 class AOCBot(commands.Bot):
     def __init__(self, *args, **kwargs):
         pth = pathlib.Path("settings.json")
@@ -22,14 +23,19 @@ class AOCBot(commands.Bot):
             with pth.open("r") as f:
                 self.config = ujson.load(f)
         else:
-            with pth.open("w") as f:
-                f.write(ujson.dumps({
-                    "token": "",
-                    "prefix": "!",
-                    "db": "postgres://"
-                }))
-            print(colorama.Fore.RED + "Please fill out the settings.json file, and rerun the bot")
-            raise SystemExit(1)
+            cpth = pathlib.Path("/run/secrets/settings")
+            if cpth.exists():
+                with cpth.open("r") as f:
+                    self.config = ujson.load(f)
+            else:
+                with pth.open("w") as f:
+                    f.write(ujson.dumps({
+                        "token": "",
+                        "prefix": "!",
+                        "db": "postgres://"
+                    }))
+                print(colorama.Fore.RED + "Please fill out the settings.json file, and rerun the bot")
+                raise SystemExit(1)
 
         super(AOCBot, self).__init__(*args, command_prefix=self.get_pre, description="I do cool things", **kwargs)
         self.loop.set_default_executor(futures.ThreadPoolExecutor(max_workers=2))
@@ -47,14 +53,16 @@ class AOCBot(commands.Bot):
     async def get_pre(self, _, msg):
         return commands.when_mentioned_or(self.config['prefix'])(self, msg)
 
-    async def get_board(self, board_id, cookie, force=False, seconds=15*60) -> board.Board:
+    async def get_board(self, board_id, cookie, force=False, seconds=15 * 60) -> board.Board:
         if board_id in self.board_cache:
-            if not force and (datetime.datetime.utcnow() - self.board_cache[board_id].fetched).total_seconds() < seconds:
+            if not force and (
+                    datetime.datetime.utcnow() - self.board_cache[board_id].fetched).total_seconds() < seconds:
                 return self.board_cache[board_id]
 
-        async with self.session.get(f"https://adventofcode.com/2020/leaderboard/private/view/{board_id}.json", headers={"cookie": cookie}) as resp:
+        async with self.session.get(f"https://adventofcode.com/2020/leaderboard/private/view/{board_id}.json",
+                                    headers={"cookie": cookie}) as resp:
             resp.raise_for_status()
-            data = await resp.json(loads=ujson.loads) # noqa
+            data = await resp.json(loads=ujson.loads)  # noqa
 
         b = board.Board(data)
         self.board_cache[board_id] = b
@@ -71,16 +79,19 @@ class AOCBot(commands.Bot):
             return await context.send("This command can only be used in a server")
 
         await super(AOCBot, self).on_command_error(context, exception)
-        await context.send("Something screwed up: " + ''.join(traceback.format_exception(type(exception), exception, exception.__traceback__)))
+        await context.send("Something screwed up: " + ''.join(
+            traceback.format_exception(type(exception), exception, exception.__traceback__)))
+
 
 intents = discord.Intents.default()
 intents.members = True
 bot = AOCBot(allowed_mentions=discord.AllowedMentions(everyone=False, roles=False, users=False), intents=intents)
 
+
 @bot.command(aliases=['hello'])
 async def about(ctx):
     if not bot.owner_id and not bot.owner_ids:
-        await bot.is_owner(ctx.author) # get the owner
+        await bot.is_owner(ctx.author)  # get the owner
 
     owner = bot.owner_ids or [bot.owner_id]
     fmt = f"Made by IAmTomahawkx#1000 (547861735391100931).\nThis bot is being run by {', '.join(f'<@!{x}>' for x in owner)}\n Just your average discord bot. "
@@ -90,12 +101,15 @@ async def about(ctx):
 
     await ctx.send(fmt)
 
+
 @bot.command()
 async def invite(ctx):
     """
     gives you a link to invite this bot
     """
-    await ctx.send(embed=discord.Embed(description=f"You can invite me [Here]({discord.utils.oauth_url(bot.user.id)})", colour=0x2F3136))
+    await ctx.send(embed=discord.Embed(description=f"You can invite me [Here]({discord.utils.oauth_url(bot.user.id)})",
+                                       colour=0x2F3136))
+
 
 bot.load_extension("cogs.aoc")
 bot.load_extension("cogs.reminder")

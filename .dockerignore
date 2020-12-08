@@ -1,0 +1,6 @@
+*
+!cogs/
+!utils/
+!*.txt
+!schema.sql
+!*.py
