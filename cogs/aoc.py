@@ -90,8 +90,8 @@ class Leaderboard(commands.Cog):
         boards = []
         index = 0
         while index < len(vals):
-            boards.append(tabulate.tabulate(vals[index:index+4], headers=("Stars \U00002b50", "board points", "name"), tablefmt="simple", stralign="center").strip())
-            index += 4
+            boards.append(tabulate.tabulate(vals[index:index+5], headers=("Stars \U00002b50", "board points", "name"), tablefmt="simple", stralign="center").strip())
+            index += 5
 
         menu = ext_menus.MenuPages(menus.LeaderboardDataSource(boards, board), clear_reactions_after=True)
         await menu.start(ctx)
@@ -254,5 +254,12 @@ class Leaderboard(commands.Cog):
 
             rows.append((day, star_1, star_2, ", ".join(day_langs)))
 
-        table = tabulate.tabulate(rows, headers=("Day #", "First star", "Second star", "Languages used"), tablefmt="plain")
-        await ctx.send("```\n" + table + "\n```")
+        boards = []
+        index = 0
+        while index < len(rows):
+            boards.append(tabulate.tabulate(rows[index:index + 5], headers=("Day #", "First star", "Second star", "Languages used"),
+                                            tablefmt="simple", stralign="center").strip())
+            index += 4
+
+        menu = ext_menus.MenuPages(menus.LeaderboardDataSource(boards, board), clear_reactions_after=True)
+        await menu.start(ctx)
