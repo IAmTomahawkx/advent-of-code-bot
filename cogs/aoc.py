@@ -261,5 +261,5 @@ class Leaderboard(commands.Cog):
                                             tablefmt="simple", stralign="center").strip())
             index += 4
 
-        menu = ext_menus.MenuPages(menus.LeaderboardDataSource(boards, board), clear_reactions_after=True)
+        menu = ext_menus.MenuPages(menus.InfoDataSource(boards), clear_reactions_after=True)
         await menu.start(ctx)
