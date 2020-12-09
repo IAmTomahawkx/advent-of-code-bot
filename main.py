@@ -114,4 +114,6 @@ async def invite(ctx):
 bot.load_extension("cogs.aoc")
 bot.load_extension("cogs.reminder")
 bot.load_extension("jishaku")
+bot.remove_command("help")
+bot.load_extension("cogs.help")                   
 bot.run(bot.config['token'])
