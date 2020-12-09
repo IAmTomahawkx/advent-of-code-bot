@@ -539,14 +539,12 @@ starry
 stax
 stencil
 stones
-str
 straw
 subskin
 sumerian
 surface
 swap
-swift4
-symbolic-python
+swift
 syms
 taco
 tampio

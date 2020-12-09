@@ -184,6 +184,9 @@ class Leaderboard(commands.Cog):
         if day > 25:
             return await ctx.send("Hmm, that doesnt seem like a valid day")
 
+        if day > today.day:
+            return await ctx.send("Nice try")
+
         try:
             await self.bot.db.execute("INSERT INTO langs VALUES ($1, $2, $3, $4)", ctx.author.id, day, language, file_link)
         except asyncpg.UniqueViolationError:
