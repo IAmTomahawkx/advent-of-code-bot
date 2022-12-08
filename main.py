@@ -59,7 +59,7 @@ class AOCBot(commands.Bot):
                     datetime.datetime.utcnow() - self.board_cache[board_id].fetched).total_seconds() < seconds:
                 return self.board_cache[board_id]
 
-        async with self.session.get(f"https://adventofcode.com/2021/leaderboard/private/view/{board_id}.json",
+        async with self.session.get(f"https://adventofcode.com/2022/leaderboard/private/view/{board_id}.json",
                                     headers={"cookie": cookie}) as resp:
             resp.raise_for_status()
             data = await resp.json(loads=ujson.loads)  # noqa
